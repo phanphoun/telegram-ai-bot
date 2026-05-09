@@ -64,7 +64,7 @@ def is_about_phoun(text):
     identity_keywords = ['who are you', 'what is your name', 'tell me about you', 'about yourself',
                          'your skill', 'your job', 'your work', 'your age', 'your email',
                          'your school', 'your experience', 'your hobby', 'your language',
-                         'where are you from', 'what do you do']
+                         'where are you from', 'what do you do', 'how old are you', 'how old']
     for kw in identity_keywords:
         if kw in text_lower:
             return True
@@ -83,24 +83,26 @@ def get_phoun_answer(text):
                     answers.append((field, value))
                     break
 
+    # Sensitive fields that should be private
+    SENSITIVE_FIELDS = {'age', 'email', 'phone', 'address'}
+
     if answers:
-        # Build a natural conversational response
+        # Check if any sensitive field was asked
+        for field, value in answers:
+            if field in SENSITIVE_FIELDS:
+                return "Sorry, I can't share my personal information."
+
+        # Build a natural conversational response for non-sensitive fields
         responses = []
         for field, value in answers:
             if field == 'name':
                 responses.append(f"My name is {value}.")
             elif field == 'job_title':
                 responses.append(f"I'm a {value}.")
-            elif field == 'age':
-                responses.append(f"I'm {value} years old.")
             elif field == 'skills':
                 responses.append(f"My skills include {value}.")
             elif field == 'school':
                 responses.append(f"I studied at {value}.")
-            elif field == 'email':
-                responses.append(f"You can reach me at {value}.")
-            elif field == 'phone':
-                responses.append(f"My phone number is {value}.")
             elif field == 'city':
                 responses.append(f"I'm based in {value}.")
             elif field == 'country':
