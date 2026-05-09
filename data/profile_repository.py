@@ -12,9 +12,10 @@ class ProfileRepository:
             'name': ['name', 'who are you', 'who is phoun', 'about phoun', 'introduce phoun'],
             'job_title': ['job', 'work', 'occupation', 'career', 'profession', 'do for a living', 'what do you do'],
             'skills': ['skill', 'tech stack', 'technology', 'programming', 'code', 'framework', 'language', 'vue', 'react', 'typescript', 'node', 'tailwind', 'mongodb', 'postgresql'],
-            'github': ['github', 'git', 'repository', 'repo', 'source code', 'projects'],
+            'github': ['github', 'git', 'repository', 'repo', 'source code', 'projects', 'project', 'your project', 'my project'],
             'linkedin': ['linkedin', 'social', 'profile'],
             'company': ['company', 'employer', 'work for', 'organization', 'freelance'],
+            'portfolio': ['portfolio', 'website', 'your website', 'camdev', 'camdev.site'],
             'age': ['age', 'old', 'year', 'birth'],
             'email': ['email', 'mail', 'contact', 'reach'],
             'phone': ['phone', 'number', 'call', 'whatsapp'],
@@ -107,7 +108,8 @@ class ProfileRepository:
             'name': '👤', 'job_title': '💼', 'skills': '🛠️', 'school': '🎓',
             'city': '📍', 'country': '🌍', 'company': '🏢', 'experience': '⭐',
             'hobbies': '🎮', 'languages': '🗣️', 'github': '🐙', 'linkedin': '💼',
-            'bio': '📝', 'position': '📋', 'level': '📊', 'interests': '💡'
+            'bio': '📝', 'position': '📋', 'level': '📊', 'interests': '💡',
+            'portfolio': '🌐'
         }
         
         for field, value in fields:
@@ -129,6 +131,7 @@ class ProfileRepository:
             f"📍 *Location:* {self._data.get('city', '')}, {self._data.get('country', '')}\n\n"
             f"📝 {self._data.get('bio', '')}\n\n"
             f"🔗 *Connect with me:*\n"
+            f"🌐 Portfolio: https://camdev.site\n"
             f"🐙 GitHub: {self._data.get('github', '')}\n"
             f"💼 LinkedIn: {self._data.get('linkedin', '')}\n\n"
             "Ask me anything else! 💬"
