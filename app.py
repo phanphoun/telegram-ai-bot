@@ -71,7 +71,7 @@ def is_about_phoun(text):
     return False
 
 def get_phoun_answer(text):
-    """Find relevant Phoun data based on keywords in the question with conversational responses"""
+    """Find relevant Phoun data based on keywords in the question with styled responses"""
     text_lower = text.lower()
     answers = []
 
@@ -90,63 +90,117 @@ def get_phoun_answer(text):
         # Check if any sensitive field was asked
         for field, value in answers:
             if field in SENSITIVE_FIELDS:
-                return "Sorry, I can't share my personal information."
+                return "🔒 *Privacy Protected*\n\nSorry, I can't share my personal information. 🙅‍♂️"
 
-        # Build a natural conversational response for non-sensitive fields
+        # Build a styled response with emojis for non-sensitive fields
         responses = []
         for field, value in answers:
             if field == 'name':
-                responses.append(f"My name is {value}.")
+                responses.append(f"👤 *Name:* {value}")
             elif field == 'job_title':
-                responses.append(f"I'm a {value}.")
+                responses.append(f"💼 *Job:* {value}")
             elif field == 'skills':
-                responses.append(f"My skills include {value}.")
+                responses.append(f"🛠️ *Skills:* {value}")
             elif field == 'school':
-                responses.append(f"I studied at {value}.")
+                responses.append(f"🎓 *Education:* {value}")
             elif field == 'city':
-                responses.append(f"I'm based in {value}.")
+                responses.append(f"📍 *Location:* {value}")
             elif field == 'country':
-                responses.append(f"I'm from {value}.")
+                responses.append(f"🌍 *Country:* {value}")
             elif field == 'company':
-                responses.append(f"I work as {value}.")
+                responses.append(f"🏢 *Company:* {value}")
             elif field == 'experience':
-                responses.append(f"I have {value} of experience.")
+                responses.append(f"⭐ *Experience:* {value}")
             elif field == 'hobbies':
-                responses.append(f"In my free time, I enjoy {value.lower()}.")
+                responses.append(f"🎮 *Hobbies:* {value}")
             elif field == 'languages':
-                responses.append(f"I speak {value}.")
+                responses.append(f"🗣️ *Languages:* {value}")
             elif field == 'github':
-                responses.append(f"Check out my GitHub: {value}")
+                responses.append(f"🐙 *GitHub:* {value}")
             elif field == 'linkedin':
-                responses.append(f"Here's my LinkedIn: {value}")
+                responses.append(f"💼 *LinkedIn:* {value}")
             elif field == 'bio':
-                responses.append(value)
+                responses.append(f"📝 *Bio:* {value}")
             else:
                 field_display = field.replace('_', ' ').title()
-                responses.append(f"My {field_display.lower()} is {value}.")
+                responses.append(f"• *{field_display}:* {value}")
 
-        return " ".join(responses)
+        header = "👋 *Hey there! Here's a bit about me:*\n\n"
+        return header + "\n".join(responses) + "\n\n🚀 Feel free to ask more!"
 
-    # If no specific match but asking about Phoun, return a summary
+    # If no specific match but asking about Phoun, return a styled summary
     if PHOUN_DATA:
         return (
-            f"I'm {PHOUN_DATA.get('name', 'Phoun Phan')}, a {PHOUN_DATA.get('job_title', 'developer')}. "
-            f"{PHOUN_DATA.get('bio', '')}"
+            "👋 *Hello! I'm Phoun Phan* 🚀\n\n"
+            f"💼 *Role:* {PHOUN_DATA.get('job_title', 'developer')}\n"
+            f"🛠️ *Skills:* {PHOUN_DATA.get('skills', '')}\n"
+            f"⭐ *Experience:* {PHOUN_DATA.get('experience', '')}\n"
+            f"🎓 *Education:* {PHOUN_DATA.get('school', '')}\n"
+            f"📍 *Location:* {PHOUN_DATA.get('city', '')}, {PHOUN_DATA.get('country', '')}\n\n"
+            f"📝 {PHOUN_DATA.get('bio', '')}\n\n"
+            f"🔗 *Connect with me:*\n"
+            f"🐙 GitHub: {PHOUN_DATA.get('github', '')}\n"
+            f"💼 LinkedIn: {PHOUN_DATA.get('linkedin', '')}\n\n"
+            "Ask me anything else! 💬"
         )
 
-    return "I don't have any information about Phoun yet."
+    return "I don't have any information about Phoun yet. 😕"
 
 # This handles the /start and /help commands
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
     welcome_text = (
-        "🤖 *Welcome to AI Bot!*\n\n"
-        "I can help you with:\n"
-        "• 💬 *Ask me anything* - I answer with AI-powered responses\n"
-        "• 🖼️ */image* `<description>` - Generate AI images\n\n"
-        "Long responses are automatically split into multiple messages."
+        "✨ *Welcome! I'm your AI Assistant* ✨\n\n"
+        "🎉 Hey there! I'm ready to help you with all sorts of cool stuff:\n\n"
+        "🧠 *Ask Me Anything*\n"
+        "   Coding, world events, movies, music, games, science... you name it!\n\n"
+        "🎨 *Generate Images*\n"
+        "   Type `/image <description>` to create amazing AI art!\n\n"
+        "👤 *About Phoun*\n"
+        "   Ask about skills, projects, education, and more!\n\n"
+        "⚡ *Features*\n"
+        "   • Smart responses with Markdown formatting\n"
+        "   • Auto-split long messages\n"
+        "   • Fast and friendly replies\n\n"
+        "💡 *Try these:*\n"
+        "   • `What can you help me with?`\n"
+        "   • `/image a cyberpunk city`\n"
+        "   • `Explain quantum computing`\n\n"
+        "Let's get started! 🚀"
     )
     bot.reply_to(message, welcome_text, parse_mode="Markdown")
+
+def style_gemini_response(text):
+    """Add emojis and formatting to Gemini responses to make them more engaging"""
+    # Add a fun header based on response content
+    text_lower = text.lower()
+
+    # Detect topic and add appropriate header
+    if any(word in text_lower for word in ['code', 'programming', 'python', 'javascript', 'developer', 'function', 'class', 'variable']):
+        header = "💻 *Here's what I found for you!*\n\n"
+    elif any(word in text_lower for word in ['science', 'physics', 'chemistry', 'biology', 'quantum', 'space']):
+        header = "🔬 *Science Time!*\n\n"
+    elif any(word in text_lower for word in ['history', 'war', 'ancient', 'empire', 'civilization']):
+        header = "📜 *History Lesson!*\n\n"
+    elif any(word in text_lower for word in ['movie', 'film', 'actor', 'director', 'cinema']):
+        header = "🎬 *Movie Talk!*\n\n"
+    elif any(word in text_lower for word in ['song', 'music', 'album', 'artist', 'band', 'genre']):
+        header = "🎵 *Music Vibes!*\n\n"
+    elif any(word in text_lower for word in ['game', 'gaming', 'player', 'video game', 'rpg']):
+        header = "🎮 *Gaming Zone!*\n\n"
+    elif any(word in text_lower for word in ['food', 'recipe', 'cook', 'cuisine', 'restaurant']):
+        header = "🍽️ *Food for Thought!*\n\n"
+    elif any(word in text_lower for word in ['travel', 'country', 'city', 'tourism', 'vacation']):
+        header = "✈️ *Travel Guide!*\n\n"
+    elif any(word in text_lower for word in ['help', 'assist', 'support', 'question']):
+        header = "🙌 *Happy to Help!*\n\n"
+    else:
+        header = "✨ *Here's your answer!*\n\n"
+
+    # Add a friendly footer
+    footer = "\n\n💡 *Tip:* Feel free to ask follow-up questions or try `/image` for visuals! 🎨"
+
+    return header + text + footer
 
 def escape_markdown(text):
     """Escape special Markdown characters for Telegram"""
@@ -246,8 +300,10 @@ def handle_message(message):
         if "candidates" in result and len(result["candidates"]) > 0:
             response_text = result["candidates"][0]["content"]["parts"][0]["text"]
             
+            # Style the response with emojis and formatting
+            styled_response = style_gemini_response(response_text)
             # Send text response (split if too long)
-            send_long_text(message.chat.id, response_text, message.message_id)
+            send_long_text(message.chat.id, styled_response, message.message_id)
             
             # Optionally generate a related image for certain topics
             # Uncomment below if you want automatic images for every response
