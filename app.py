@@ -1,13 +1,19 @@
+import os
 import telebot
 import requests
 import csv
 import re
 
-# Replace 'YOUR_TOKEN_HERE' with the token from BotFather
-API_TOKEN = '8606599772:AAHVunwuGVCwaa-JQ3g4h3GaWD8ZHVro7sI'
+# Get API keys from environment variables
+API_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+
+if not API_TOKEN:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is required")
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY environment variable is required")
 
 bot = telebot.TeleBot(API_TOKEN)
-GEMINI_API_KEY = "AIzaSyAoai2XQxphd5a9Mc2zTUQkT5J1JrBguoE"
 
 # Load Phoun's data from CSV
 def load_phoun_data():
