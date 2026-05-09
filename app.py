@@ -71,39 +71,67 @@ def is_about_phoun(text):
     return False
 
 def get_phoun_answer(text):
-    """Find relevant Phoun data based on keywords in the question"""
+    """Find relevant Phoun data based on keywords in the question with conversational responses"""
     text_lower = text.lower()
     answers = []
-    
+
     for field, keywords in PHOUN_KEYWORDS.items():
         for kw in keywords:
             if kw in text_lower:
                 value = PHOUN_DATA.get(field, '')
                 if value and value not in [a[1] for a in answers]:
-                    # Format field name for display
-                    field_display = field.replace('_', ' ').title()
-                    answers.append((field_display, value))
+                    answers.append((field, value))
                     break
-    
+
     if answers:
-        response = "Here's what I found about *Phoun Phan*:\n\n"
-        for field_display, value in answers:
-            response += f"*{field_display}:* {value}\n"
-        return response
-    
+        # Build a natural conversational response
+        responses = []
+        for field, value in answers:
+            if field == 'name':
+                responses.append(f"My name is {value}.")
+            elif field == 'job_title':
+                responses.append(f"I'm a {value}.")
+            elif field == 'age':
+                responses.append(f"I'm {value} years old.")
+            elif field == 'skills':
+                responses.append(f"My skills include {value}.")
+            elif field == 'school':
+                responses.append(f"I studied at {value}.")
+            elif field == 'email':
+                responses.append(f"You can reach me at {value}.")
+            elif field == 'phone':
+                responses.append(f"My phone number is {value}.")
+            elif field == 'city':
+                responses.append(f"I'm based in {value}.")
+            elif field == 'country':
+                responses.append(f"I'm from {value}.")
+            elif field == 'company':
+                responses.append(f"I work as {value}.")
+            elif field == 'experience':
+                responses.append(f"I have {value} of experience.")
+            elif field == 'hobbies':
+                responses.append(f"In my free time, I enjoy {value.lower()}.")
+            elif field == 'languages':
+                responses.append(f"I speak {value}.")
+            elif field == 'github':
+                responses.append(f"Check out my GitHub: {value}")
+            elif field == 'linkedin':
+                responses.append(f"Here's my LinkedIn: {value}")
+            elif field == 'bio':
+                responses.append(value)
+            else:
+                field_display = field.replace('_', ' ').title()
+                responses.append(f"My {field_display.lower()} is {value}.")
+
+        return " ".join(responses)
+
     # If no specific match but asking about Phoun, return a summary
     if PHOUN_DATA:
         return (
-            f"*{PHOUN_DATA.get('name', 'Phoun Phan')}* is a {PHOUN_DATA.get('job_title', 'developer')}.\n\n"
-            f"*Skills:* {PHOUN_DATA.get('skills', '')}\n"
-            f"*Experience:* {PHOUN_DATA.get('experience', '')}\n"
-            f"*Education:* {PHOUN_DATA.get('school', '')}\n"
-            f"*Location:* {PHOUN_DATA.get('city', '')}, {PHOUN_DATA.get('country', '')}\n\n"
-            f"*{PHOUN_DATA.get('bio', '')}*\n\n"
-            f"*GitHub:* {PHOUN_DATA.get('github', '')}\n"
-            f"*LinkedIn:* {PHOUN_DATA.get('linkedin', '')}"
+            f"I'm {PHOUN_DATA.get('name', 'Phoun Phan')}, a {PHOUN_DATA.get('job_title', 'developer')}. "
+            f"{PHOUN_DATA.get('bio', '')}"
         )
-    
+
     return "I don't have any information about Phoun yet."
 
 # This handles the /start and /help commands
