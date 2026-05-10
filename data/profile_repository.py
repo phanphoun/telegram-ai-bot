@@ -28,7 +28,8 @@ class ProfileRepository:
             'languages': ['language', 'speak', 'khmer', 'english', 'french', 'chinese'],
             'hobbies': ['hobby', 'hobbies', 'like to do', 'free time', 'fun', 'gaming', 'music', 'reading'],
             'interests': ['interest', 'passion', 'into', 'web development', 'ai', 'open source'],
-            'bio': ['bio', 'about me', 'summary', 'description', 'overview', 'portfolio']
+            'bio': ['bio', 'about me', 'summary', 'description', 'overview'],
+            'projects': ['project', 'projects', 'your project', 'my project', 'football', 'booking', 'student management', 'sms', 'dev review', 'dashboard', 'portfolio']
         }
         self._sensitive_fields = {'age', 'email', 'address'}
         self._load_data()
@@ -109,7 +110,7 @@ class ProfileRepository:
             'city': '📍', 'country': '🌍', 'company': '🏢', 'experience': '⭐',
             'hobbies': '🎮', 'languages': '🗣️', 'github': '🐙', 'linkedin': '💼',
             'bio': '📝', 'position': '📋', 'level': '📊', 'interests': '💡',
-            'portfolio': '🌐'
+            'portfolio': '🌐', 'projects': '🚀'
         }
         
         for field, value in fields:
