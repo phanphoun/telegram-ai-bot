@@ -1,4 +1,5 @@
 import requests
+import time
 from typing import Dict, Optional
 from config import Settings
 
@@ -42,33 +43,57 @@ INSTRUCTIONS:
         self.api_url = Settings.GEMINI_API_URL
     
     def generate_response(self, prompt: str) -> Optional[str]:
-        """Generate AI response with personal context prepended"""
+        """Generate AI response with personal context prepended and retry logic"""
         # Prepend profile context so Gemini knows who Phoun is
         contextualized_prompt = f"{self.PROFILE_CONTEXT}\n\nUser question: {prompt}\n\nAnswer as Phoun Phan would:"
         
-        try:
-            response = requests.post(
-                f"{self.api_url}?key={self.api_key}",
-                json={"contents": [{"parts": [{"text": contextualized_prompt}]}]},
-                timeout=30
-            )
-            result = response.json()
-            
-            if "candidates" in result and len(result["candidates"]) > 0:
-                return result["candidates"][0]["content"]["parts"][0]["text"]
-            
-            print(f"No candidates in response: {result}")
-            return None
-            
-        except requests.exceptions.Timeout:
-            print("Gemini API request timed out")
-            return None
-        except requests.exceptions.RequestException as e:
-            print(f"Gemini API request failed: {e}")
-            return None
-        except Exception as e:
-            print(f"Unexpected error in Gemini service: {e}")
-            return None
+        max_retries = 3
+        base_delay = 2  # seconds
+        
+        for attempt in range(max_retries):
+            try:
+                response = requests.post(
+                    f"{self.api_url}?key={self.api_key}",
+                    json={"contents": [{"parts": [{"text": contextualized_prompt}]}]},
+                    timeout=30
+                )
+                
+                # Handle rate limiting (429)
+                if response.status_code == 429:
+                    if attempt < max_retries - 1:
+                        delay = base_delay * (2 ** attempt)  # Exponential backoff
+                        print(f"Rate limited. Retrying in {delay}s... (attempt {attempt + 1}/{max_retries})")
+                        time.sleep(delay)
+                        continue
+                    else:
+                        print("Gemini API rate limit exceeded. Max retries reached.")
+                        return None
+                
+                result = response.json()
+                
+                if "candidates" in result and len(result["candidates"]) > 0:
+                    return result["candidates"][0]["content"]["parts"][0]["text"]
+                
+                print(f"No candidates in response: {result}")
+                return None
+                
+            except requests.exceptions.Timeout:
+                print("Gemini API request timed out")
+                if attempt < max_retries - 1:
+                    time.sleep(base_delay * (2 ** attempt))
+                    continue
+                return None
+            except requests.exceptions.RequestException as e:
+                print(f"Gemini API request failed: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(base_delay * (2 ** attempt))
+                    continue
+                return None
+            except Exception as e:
+                print(f"Unexpected error in Gemini service: {e}")
+                return None
+        
+        return None
     
     def health_check(self) -> bool:
         """Check if Gemini API is accessible"""

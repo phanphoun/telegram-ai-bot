@@ -6,7 +6,7 @@ class Settings:
     
     TELEGRAM_BOT_TOKEN: str = os.environ.get('TELEGRAM_BOT_TOKEN', '')
     GEMINI_API_KEY: str = os.environ.get('GEMINI_API_KEY', '')
-    GEMINI_MODEL: str = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
+    GEMINI_MODEL: str = os.environ.get('GEMINI_MODEL', 'gemini-2.0-flash-lite')
     GEMINI_API_URL: str = f"https://generativelanguage.googleapis.com/v1/models/{GEMINI_MODEL}:generateContent"
     
     # File paths
