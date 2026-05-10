@@ -70,7 +70,16 @@ class ProfileRepository:
             'where are you from', 'what do you do', 'how old are you', 'how old'
         ]
         
-        return any(kw in text_lower for kw in identity_keywords)
+        if any(kw in text_lower for kw in identity_keywords):
+            return True
+        
+        # Check all profile keywords (projects, skills, etc.)
+        for field, keywords in self._keywords.items():
+            for kw in keywords:
+                if kw in text_lower:
+                    return True
+        
+        return False
     
     def get_answer(self, text: str) -> Optional[str]:
         """Get styled answer for a question about the profile"""
