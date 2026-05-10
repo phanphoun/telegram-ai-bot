@@ -1,8 +1,17 @@
+import os
 import telebot
 from config import Settings
 from data import ProfileRepository
 from services import GeminiService, ImageService
 from handlers import register_common, register_phoun, register_ai, register_image
+
+# Load environment variables from .env file if it exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed, continue without it
+    pass
 
 def main():
     """Main entry point for the Telegram AI Bot"""
