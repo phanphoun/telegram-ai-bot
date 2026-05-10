@@ -58,6 +58,16 @@ class ProfileRepository:
         """Check if text is asking about the profile owner"""
         text_lower = text.lower()
         
+        # Skip image generation, prompt, and code requests
+        negative_keywords = [
+            'generate image', 'create image', 'make image', 'image of',
+            'prompt for', 'prompt to', 'give me a prompt',
+            'generate a', 'create a', 'write a',
+            'code for', 'function to', 'how to code'
+        ]
+        if any(kw in text_lower for kw in negative_keywords):
+            return False
+        
         # Check if name is mentioned
         if 'phoun' in text_lower:
             return True
