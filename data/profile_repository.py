@@ -18,7 +18,7 @@ class ProfileRepository:
             'portfolio': ['portfolio', 'website', 'your website', 'camdev', 'camdev.site'],
             'age': ['age', 'old', 'year', 'birth'],
             'email': ['email', 'mail', 'contact', 'reach'],
-            'phone': ['phone', 'number', 'call', 'whatsapp'],
+            'phone': ['phone', 'number', 'call', 'whatsapp', 'can i call you', 'can you speak', 'speak with you', 'contact'],
             'city': ['city', 'live', 'location', 'where are you', 'from', 'address'],
             'country': ['country', 'nationality', 'nation'],
             'school': ['school', 'university', 'college', 'study', 'education', 'learn', 'student'],
@@ -30,7 +30,7 @@ class ProfileRepository:
             'interests': ['interest', 'passion', 'into', 'web development', 'ai', 'open source'],
             'bio': ['bio', 'about me', 'summary', 'description', 'overview', 'portfolio']
         }
-        self._sensitive_fields = {'age', 'email', 'phone', 'address'}
+        self._sensitive_fields = {'age', 'email', 'address'}
         self._load_data()
     
     def _load_data(self) -> None:
