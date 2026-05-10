@@ -18,6 +18,7 @@ A hybrid Telegram bot that combines personal profile data with AI-powered respon
 ## Features
 
 - **Phoun Profile Q&A**: Ask about skills, job, education, hobbies, languages, and more
+- **AI Training Context**: Gemini AI is trained with Phoun's profile (skills, projects, education, portfolio) and answers as Phoun would
 - **Privacy Protection**: Sensitive fields (age, email, phone, address) are blocked
 - **Gemini AI Integration**: Answers any general question with styled, emoji-rich responses
 - **AI Image Generation**: Use `/image <description>` to generate images via Pollinations AI
@@ -37,7 +38,7 @@ User Message
      |                                        |
      v                                        |
 [Gemini AI API Call] <------------------------+
-     |
+     | (with Phoun's profile context)
      v
 [Response Styling] ---> [Send to Telegram]
 ```
@@ -45,7 +46,7 @@ User Message
 The bot uses a hybrid approach:
 1. First checks if the question is about Phoun (using keyword matching)
 2. If yes: reads from the CSV "training data" file
-3. If no: sends the question to Gemini AI for a general answer
+3. If no: sends the question to Gemini AI with Phoun's profile context (skills, projects, education, portfolio) so it answers as Phoun would
 
 ## Training Data System
 
