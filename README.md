@@ -304,36 +304,27 @@ tail -f bot.log
 pkill -f "python app.py"
 ```
 
-#### Step 9 (Optional): Auto-Start on Boot with systemd
+#### Step 9 (Recommended): Auto-Start on Boot with systemd
 
-Create a service file:
+The bot comes with a pre-configured systemd service file.
+
+**Copy service file to system:**
+```bash
+cd ~/telegram-ai-bot
+sudo cp telegram-bot.service /etc/systemd/system/telegram-bot.service
+```
+
+**Important:** Edit the service file to match your setup:
 ```bash
 sudo nano /etc/systemd/system/telegram-bot.service
 ```
 
-Paste this content:
-```ini
-[Unit]
-Description=Telegram AI Bot
-After=network.target
+Make sure these match your server:
+- `User=pnc` (change to your username)
+- `WorkingDirectory=/home/pnc/telegram-ai-bot` (change path if needed)
+- Environment variables (tokens should already be set)
 
-[Service]
-Type=simple
-User=your_username
-WorkingDirectory=/home/your_username/telegram-ai-bot
-ExecStart=/home/your_username/telegram-ai-bot/venv/bin/python /home/your_username/telegram-ai-bot/app.py
-Restart=always
-RestartSec=10
-Environment=TELEGRAM_BOT_TOKEN=your_token_here
-Environment=GEMINI_API_KEY=your_key_here
-
-[Install]
-WantedBy=multi-user.target
-```
-
-**Important:** Replace `your_username` with your actual Linux username.
-
-Enable and start:
+**Enable and start:**
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable telegram-bot
@@ -343,6 +334,34 @@ sudo systemctl start telegram-bot
 **Check status:**
 ```bash
 sudo systemctl status telegram-bot
+```
+
+**View logs:**
+```bash
+sudo journalctl -u telegram-bot -f
+```
+
+#### Step 10: One-Command Deploy Script
+
+After any code update on GitHub, deploy with one command:
+
+```bash
+cd ~/telegram-ai-bot
+bash deploy.sh
+```
+
+This script will:
+1. Stop the bot
+2. Pull latest code from GitHub
+3. Install any new dependencies
+4. Restart the bot
+5. Show the status
+
+**Or manually:**
+```bash
+cd ~/telegram-ai-bot
+git pull origin main
+sudo systemctl restart telegram-bot
 ```
 
 ---
